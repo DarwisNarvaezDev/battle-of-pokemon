@@ -4,8 +4,4 @@ import './index.css';
 import BattleView from './views/Battle';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <BattleView />
-  </React.StrictMode>
-);
+root.render(<BattleView />);

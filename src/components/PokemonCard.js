@@ -42,7 +42,8 @@ function PokemonCard(props) {
 
 const PokemonCardStyles = {
   container: {
-    boxShadow: 5,
+    boxShadow: 3,
+    mb: "10px",
     overflow: 'hidden',
     width: "100%",
     height: "100%",

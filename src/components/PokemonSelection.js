@@ -18,27 +18,26 @@ function PokemonSelection() {
           id="battle-view-pokemon-select-title"
           sx={PokemonSelectionStyles.title}
         >
-          <Typography variant="h6">Select your Pokemon</Typography>
+          <Typography sx={PokemonSelectionStyles.subTitle} variant="h6">Select your Pokemon</Typography>
         </Box>
         <Grid
+          id="pokemon-grid"
           container
           rowGap={0}
           columns={{ xs: 1, sm: 2, md: 4, lg: 5 }}
           spacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+          sx={{
+            pl: "4px",
+            pr: "4px",
+          }}
         >
           {pokemons.map((pokemon) => {
             return (
               <>
                 <Grid
                   item
-                  lg={1}
-                  md={2}
-                  sm={2}
-                  xs={1}
-                  sx={{
-                    height: '150px',
-                    width: '170px',
-                  }}
+                  lg={1} md={2} sm={2} xs={1}
+                  sx={{height: '130px'}}
                 >
                   <PokemonCard {...pokemon} />
                 </Grid>
@@ -46,7 +45,7 @@ function PokemonSelection() {
             );
           })}
         </Grid>
-      </Box>
+        </Box>
     </>
   );
 }
@@ -59,6 +58,7 @@ const PokemonSelectionStyles = {
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'column',
+    overflow: "scroll",
   },
   title: {
     width: '100%',
@@ -66,6 +66,13 @@ const PokemonSelectionStyles = {
     display: 'flex',
     justifyContent: 'left',
   },
+  subTitle: {
+      typography: {
+        xs: "body2",
+        sm: "body1",
+        lg: "h6"
+      }
+  }
 };
 
 export default PokemonSelection;
