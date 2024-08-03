@@ -49,10 +49,10 @@ const BattleViewStyles = {
     width: '70%',
     height: '90%',
     maxHeight: '90%',
-    backgroundColor: 'salmon',
     display: 'flex',
+    justifyContent: "flex-start",
+    alignItems: "center",
     flexDirection: 'column',
-    padding: '0',
   },
 };
 
