@@ -10,11 +10,12 @@ import {
 } from '@mui/material';
 import Stat from './Stat';
 import OpponentPlaceholder from './OpponentPlaceholder';
+import { useState } from 'react';
 
 function PokemonCard(props) {
   const { id, name, attack, defense, hp, speed, type, imageUrl } =
     props.pokemonData;
-
+  const [loading, setLoading] = useState(props.loading);
   const withStats = props.withStats;
   const placeholder = props.placeholder;
   const opponentWait = props.opponentWait;
@@ -44,15 +45,39 @@ function PokemonCard(props) {
                   : PokemonCardStyles.wrapperWoStats
               }
             >
-              <img
-                style={
-                  placeholder
-                    ? PokemonCardStyles.placeholderImg
-                    : PokemonCardStyles.img
-                }
-                src={imageUrl}
-                alt={name}
-              ></img>
+              {!loading && (
+                <>
+                  <img
+                    style={
+                      placeholder
+                        ? PokemonCardStyles.placeholderImg
+                        : PokemonCardStyles.img
+                    }
+                    src={imageUrl}
+                    alt={name}
+                  ></img>
+                </>
+              )}
+              {loading && (
+                <>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Skeleton
+                      variant="circular"
+                      width={'50px'}
+                      height={'50px'}
+                      sx={{}}
+                    />
+                  </Box>
+                </>
+              )}
             </Box>
             <Box
               id="pokemon-card-name"
@@ -63,7 +88,20 @@ function PokemonCard(props) {
               }
             >
               <Typography variant={withStats ? 'h5' : 'body1'}>
-                {placeholder ? 'Select your pokemon' : name}
+                {!loading && <>{placeholder ? 'Select your pokemon' : name}</>}
+                {loading && (
+                  <>
+                    <Skeleton
+                      variant="rounded"
+                      width={'10px'}
+                      height={'10px'}
+                      sx={{
+                        ml: '10px',
+                        color: 'darkgray',
+                      }}
+                    />
+                  </>
+                )}
               </Typography>
             </Box>
             {withStats && (

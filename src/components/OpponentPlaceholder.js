@@ -21,7 +21,7 @@ function OpponentPlaceholder() {
             pl: '10px',
             color: 'darkgray',
           }}
-          variant="h6"
+          variant="h5"
         >
           Waiting for opponent
         </Typography>

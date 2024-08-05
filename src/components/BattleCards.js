@@ -25,7 +25,7 @@ function BattleCards() {
               height: '400px',
             }}
           >
-            <PokemonCard placeholder={true}  pokemonData={pokemon[Math.floor(Math.random() * 5)]} withStats={true} />
+            <PokemonCard opponentWait={true} placeholder={true}  pokemonData={pokemon[Math.floor(Math.random() * 5)]} withStats={true} />
           </Grid>
           <Grid
             item

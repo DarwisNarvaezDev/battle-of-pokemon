@@ -44,7 +44,7 @@ function PokemonSelection() {
             return (
               <>
                 <Grid item lg={1} md={2} sm={2} xs={1} sx={{ height: '110px' }}>
-                  <PokemonCard pokemonData={pokemon} />
+                  <PokemonCard loading={true} pokemonData={pokemon} />
                 </Grid>
               </>
             );
