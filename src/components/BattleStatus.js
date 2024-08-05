@@ -7,7 +7,6 @@ function BattleStatus(props) {
   const [renderingColor, setRenderingColor] = useState(color);
 
   useEffect(()=>{
-    console.log(color);
     setRenderingColor(color);
   },[color])
 

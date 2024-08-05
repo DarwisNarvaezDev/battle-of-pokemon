@@ -114,7 +114,6 @@ export class SessionManager {
   static getRandomPokemon() {
     try {
       const pokemonsInSession = this.getPokemonsFromSession();
-      console.log(pokemonsInSession);
       const randomPokemonId = Math.floor(Math.random() * 5);
       const filteredArray = pokemonsInSession.filter(
         (pokemon) => this.stripId(pokemon.id) == randomPokemonId
