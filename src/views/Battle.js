@@ -14,10 +14,14 @@ function BattleView() {
   const [pokemons, setPokemons] = useState([]);
 
   const pokemonBattleReducerInitialStates = {
-    battleMessage: "Loading Pokemons...",
+    battleMessage: 'Loading Pokemons...',
     battleStatusColor: BattleStatusSeverity.INFO.color,
     loading: true,
-    anyPokemonSelected: false
+    startButtonDisabled: true,
+    attackButtonDisabled: true,
+    startOverButtonDisabled: true,
+    chosenPokemon: {},
+    opponentPokemon: {},
   };
 
   const [reducerState, reducerDispatcher] = useReducer(
@@ -25,21 +29,27 @@ function BattleView() {
     pokemonBattleReducerInitialStates
   );
 
-  const fetchPokemons = ()=>{
-    const sessionPokemons = SessionManager.getPokemonsFromSession();
-    if( sessionPokemons == undefined || !sessionPokemons ){
-      setPokemons(pokemons);
-      SessionManager.storePokemons(pokemon);
-    }else{
-      setPokemons(sessionPokemons);
-    }
+  const fetchPokemons = () => {
+    SessionManager.storePokemons(pokemon);
+    setPokemons(pokemon);
     reducerDispatcher({ type: 'POKEMON_DATA_LOADED' });
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      fetchPokemons();
-    }, 3000);
+    const sessionPokemons = SessionManager.getPokemonsFromSession();
+    if (sessionPokemons) {
+      setPokemons(sessionPokemons);
+      SessionManager.storePokemons(sessionPokemons);
+      reducerDispatcher({ type: 'POKEMON_DATA_LOADED' });
+      const userSelection = SessionManager.getChosenPokemon();
+      if( userSelection ){
+        reducerDispatcher({ type: 'POKEMON_SELECTED', payload: userSelection });
+      }
+    } else {
+      setTimeout(() => {
+        fetchPokemons();
+      }, 3000);
+    }
   }, []);
 
   return (
@@ -74,20 +84,21 @@ function BattleView() {
           }}
         >
           <BattleViewHeader battleViewTitle={battleViewTitle} />
-          <PokemonSelection 
+          <PokemonSelection
             loading={reducerState.loading}
             reducerState={reducerState}
             reducerDispatcher={reducerDispatcher}
-            />
-          <BattleStatus 
+          />
+          <BattleStatus
             message={reducerState.battleMessage}
             color={reducerState.battleStatusColor}
           />
-          <BattleCards 
+          <BattleCards
             loading={reducerState.loading}
-            anyPokemonSelected={reducerState.anyPokemonSelected}
             reducerDispatcher={reducerDispatcher}
-            />
+            reducerState={reducerState}
+            anyPokemonSelected={reducerState.anyPokemonSelected}
+          />
         </Container>
       </Box>
     </>

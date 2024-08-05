@@ -1,7 +1,7 @@
+import '../assets/fonts.css';
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import PokemonCard from './PokemonCard';
 import pokemon from '../store/pokemon';
-import '../assets/fonts.css';
 import { useEffect, useState } from 'react';
 import { SessionManager } from '../utils/SessionManager';
 
@@ -9,12 +9,16 @@ function BattleCards(props) {
   const loading = props.loading;
   const anyPokemonSelected = props.anyPokemonSelected;
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedPokemon, setSelectedPokemon] = useState({});
-  const [opponentPokemon, setOpponentPokemon] = useState({});
+  const [selectedPokemon, setSelectedPokemon] = useState(
+    props.reducerState.chosenPokemon
+  );
+  const [opponentPokemon, setOpponentPokemon] = useState(
+    props.reducerState.opponentPokemon
+  );
 
-  const resolveUserChoice = ()=>{
-    const userChoice = SessionManager.getChosenPokemon();
-    setSelectedPokemon(userChoice);
+  const resolveUserChoice = () => {
+    setSelectedPokemon(props.reducerState.chosenPokemon);
+    setIsLoading(false);
   };
 
   const resolveOpponent = () => {
@@ -27,11 +31,11 @@ function BattleCards(props) {
       resolveUserChoice();
       setTimeout(() => {
         resolveOpponent();
-        props.reducerDispatcher({type: 'READY_FOR_BATTLE'});
+        props.reducerDispatcher({ type: 'READY_FOR_BATTLE', payload: opponentPokemon });
       }, 3000);
     } else {
       setIsLoading(loading);
-    };
+    }
   }, [loading, anyPokemonSelected]);
 
   return (
@@ -85,7 +89,7 @@ function BattleCards(props) {
                 sx={BattleCardsStyles.gameButton}
                 variant="contained"
                 color="success"
-                disabled
+                disabled={props.reducerState.startButtonDisabled}
               >
                 Start Battle
               </Button>
@@ -100,8 +104,12 @@ function BattleCards(props) {
               <Button
                 sx={BattleCardsStyles.gameButton}
                 variant="contained"
-                color="error"
-                disabled
+                color="info"
+                disabled={props.reducerState.startOverButtonDisabled}
+                onClick={() => {
+                  SessionManager.clearSession();
+                  window.location.reload();
+                }}
               >
                 Start over
               </Button>

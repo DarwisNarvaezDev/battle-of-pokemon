@@ -18,8 +18,8 @@ function PokemonCard(props) {
     if (!anyPokemonSelected) {
       setIsSelected(true);
       const dispatcher = props.reducerDispatcher;
-      dispatcher({ type: 'POKEMON_SELECTED' });
-      SessionManager.storeChosenPokemon(stripPrefixFromId(id));
+      dispatcher({ type: 'POKEMON_SELECTED', payload: props.pokemonData});
+      SessionManager.storePokemonId(SessionManager.getUserChoiceItemId(), stripPrefixFromId(id));
     }
   };
 

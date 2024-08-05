@@ -1,8 +1,17 @@
 const userChoiceItemId = 'user_choice';
+const opponentItemId = 'opponent';
 const pokemonsInSessionId = 'pokemons';
 
 export class SessionManager {
   constructor() {}
+
+  static getUserChoiceItemId() {
+    return userChoiceItemId;
+  }
+
+  static getOpponentItemId() {
+    return opponentItemId;
+  }
 
   /**
    * Stores the api returned value to prevent fetches on
@@ -23,9 +32,9 @@ export class SessionManager {
    *
    * @param id
    */
-  static storeChosenPokemon(id) {
+  static storePokemonId(itemId, id) {
     try {
-      sessionStorage.setItem(userChoiceItemId, id);
+      sessionStorage.setItem(itemId, id);
     } catch (error) {
       console.error(error);
     }
@@ -69,17 +78,18 @@ export class SessionManager {
     }
   }
 
-  /**
-   * Gets a random pokemon from the session storage.
+    /**
+   * Gets the opponent from the session storage.
    *
-   * @param pokemon
    */
-  static getRandomPokemon() {
+    static getOpponentPokemon() {
       try {
         const pokemonsInSession = this.getPokemonsFromSession();
-        const randomPokemonId = Math.floor(Math.random() * 5);
+        const chosenPokemonId = parseInt(
+          sessionStorage.getItem(opponentItemId)
+        );
         const filteredArray = pokemonsInSession.filter(
-          (pokemon) => this.stripId(pokemon.id) == randomPokemonId
+          (pokemon) => this.stripId(pokemon.id) == chosenPokemonId
         );
         if (filteredArray.length > 0) {
           const filteredPokemon = filteredArray[0];
@@ -94,6 +104,42 @@ export class SessionManager {
       } catch (error) {
         console.error(error);
       }
+    }
+
+  /**
+   * Gets a random pokemon from the session storage.
+   *
+   * @param pokemon
+   */
+  static getRandomPokemon() {
+    try {
+      const pokemonsInSession = this.getPokemonsFromSession();
+      console.log(pokemonsInSession);
+      const randomPokemonId = Math.floor(Math.random() * 5);
+      const filteredArray = pokemonsInSession.filter(
+        (pokemon) => this.stripId(pokemon.id) == randomPokemonId
+      );
+      if (filteredArray.length > 0) {
+        const filteredPokemon = filteredArray[0];
+        if (filteredPokemon.id != null) {
+          return filteredPokemon;
+        } else {
+          throw new Error('Malformed pokemon object found.');
+        }
+      } else {
+        throw new Error('No valid pokemon found.');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  static clearSession(){
+    try{
+      sessionStorage.clear();
+    }catch(error){
+      console.error(error);
+    }
   }
 
   /**

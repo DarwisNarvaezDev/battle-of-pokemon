@@ -12,15 +12,19 @@ export default function (state, action) {
     case 'POKEMON_SELECTED':
       return {
         ...state,
-        anyPokemonSelected: true,
         battleMessage: 'Seeking opponent...',
-        battleStatusColor: BattleStatusSeverity.INFO.color
+        battleStatusColor: BattleStatusSeverity.INFO.color,
+        chosenPokemon: action.payload,
+        anyPokemonSelected: true
       };
     case 'READY_FOR_BATTLE':
       return {
         ...state,
         battleStatusColor: BattleStatusSeverity.DANGER.color,
         battleMessage: 'Ready for battle!',
+        startButtonDisabled: false,
+        startOverButtonDisabled: false,
+        opponentPokemon: action.payload
       }
   }
 }
