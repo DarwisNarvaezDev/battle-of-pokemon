@@ -1,19 +1,46 @@
-import React, { useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { Box, Container } from '@mui/material';
 import BattleViewHeader from '../components/BattleViewHeader';
 import PokemonSelection from '../components/PokemonSelection';
 import BattleStatus, { BattleStatusSeverity } from '../components/BattleStatus';
 import BattleCards from '../components/BattleCards';
+import PokemonBattleReducer from '../reducer/PokemonBattleReducer';
+import { SessionManager } from '../utils/SessionManager';
+import pokemon from '../store/pokemon';
 
 function BattleView() {
   const initialTitle = 'Battle of Pokemon';
   const [battleViewTitle, setBattleViewTitle] = useState(initialTitle);
-  const initialMessage = 'Please, select your pokemon';
-  const [battleMessage, setBattleMessage] = useState(initialMessage);
-  const initialMessageColor = BattleStatusSeverity.INFO.color;
-  const [battleMessageColor, setBattleMessageColor] = useState(
-    String(initialMessageColor)
+  const [pokemons, setPokemons] = useState([]);
+
+  const pokemonBattleReducerInitialStates = {
+    battleMessage: "Loading Pokemons...",
+    battleStatusColor: BattleStatusSeverity.INFO.color,
+    loading: true,
+    anyPokemonSelected: false
+  };
+
+  const [reducerState, reducerDispatcher] = useReducer(
+    PokemonBattleReducer,
+    pokemonBattleReducerInitialStates
   );
+
+  const fetchPokemons = ()=>{
+    const sessionPokemons = SessionManager.getPokemonsFromSession();
+    if( sessionPokemons == undefined || !sessionPokemons ){
+      setPokemons(pokemons);
+      SessionManager.storePokemons(pokemon);
+    }else{
+      setPokemons(sessionPokemons);
+    }
+    reducerDispatcher({ type: 'POKEMON_DATA_LOADED' });
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      fetchPokemons();
+    }, 3000);
+  }, []);
 
   return (
     <>
@@ -40,16 +67,27 @@ function BattleView() {
             height: '90%',
             maxHeight: '90%',
             display: 'flex',
-            gap:2,
+            gap: 2,
             justifyContent: 'flex-start',
             alignItems: 'center',
             flexDirection: 'column',
           }}
         >
           <BattleViewHeader battleViewTitle={battleViewTitle} />
-          <PokemonSelection />
-          <BattleStatus message={battleMessage} color={battleMessageColor} />
-          <BattleCards />
+          <PokemonSelection 
+            loading={reducerState.loading}
+            reducerState={reducerState}
+            reducerDispatcher={reducerDispatcher}
+            />
+          <BattleStatus 
+            message={reducerState.battleMessage}
+            color={reducerState.battleStatusColor}
+          />
+          <BattleCards 
+            loading={reducerState.loading}
+            anyPokemonSelected={reducerState.anyPokemonSelected}
+            reducerDispatcher={reducerDispatcher}
+            />
         </Container>
       </Box>
     </>

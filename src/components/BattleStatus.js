@@ -1,16 +1,22 @@
 import { Box, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function BattleStatus(props) {
 
   const { color, message } = props;
+  const [renderingColor, setRenderingColor] = useState(color);
+
+  useEffect(()=>{
+    console.log(color);
+    setRenderingColor(color);
+  },[color])
 
   return (
     <>
       <Box
         id="pokemon-battle-status"
         aria-label="Pokemon battle status panel"
-        sx={BattleStatusStyles(color).panel}
+        sx={BattleStatusStyles(renderingColor).panel}
       >
         <Typography variant="h6" sx={{ pl: '20px' }}>{message}</Typography>
       </Box>
@@ -34,7 +40,7 @@ const BattleStatusStyles = (color) => {
 
 export const BattleStatusSeverity = {
   INFO: { color: "rgba(156, 225, 255, 0.3)" },
-  SUCCESS: { color: "rgba(0, 179, 255, 0.3)" },
+  SUCCESS: { color: "rgba(0, 128, 2, 0.3)" },
   DANGER: { color: "rgba(153, 0, 0, 0.3)" }
 };
 

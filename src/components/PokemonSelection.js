@@ -3,12 +3,18 @@ import PokemonCard from './PokemonCard';
 import { useEffect, useState } from 'react';
 import pokemon from '../store/pokemon';
 
-function PokemonSelection() {
+function PokemonSelection(props) {
+  const loading = props.loading;
+  const [isLoading, setIsLoading] = useState(true);
   const initialState = pokemon;
   const [pokemons, setPokemons] = useState(initialState);
 
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("lg"));
+  const matches = useMediaQuery(theme.breakpoints.up('lg'));
+
+  useEffect(() => {
+    setIsLoading(loading);
+  }, [loading]);
 
   return (
     <>
@@ -25,7 +31,7 @@ function PokemonSelection() {
         aria-label="Selection panel for pokemons"
         style={PokemonSelectionStyles.container}
         sx={{
-          overflow: !matches && 'scroll'
+          overflow: !matches && 'scroll',
         }}
       >
         <Grid
@@ -35,7 +41,7 @@ function PokemonSelection() {
           columns={{ xs: 1, sm: 2, md: 4, lg: 5 }}
           spacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
           sx={{
-            pt: "4px",
+            pt: '4px',
             pl: '4px',
             pr: '4px',
           }}
@@ -44,7 +50,13 @@ function PokemonSelection() {
             return (
               <>
                 <Grid item lg={1} md={2} sm={2} xs={1} sx={{ height: '110px' }}>
-                  <PokemonCard loading={true} pokemonData={pokemon} />
+                  <PokemonCard
+                    key={pokemon.id}
+                    reducerState={props.reducerState}
+                    reducerDispatcher={props.reducerDispatcher}
+                    loading={isLoading}
+                    pokemonData={pokemon}
+                  />
                 </Grid>
               </>
             );

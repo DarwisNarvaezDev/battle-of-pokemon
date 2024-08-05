@@ -1,24 +1,40 @@
-import {
-  Box,
-  Divider,
-  LinearProgress,
-  Skeleton,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Divider, Skeleton, Stack, Typography } from '@mui/material';
 import Stat from './Stat';
 import OpponentPlaceholder from './OpponentPlaceholder';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { SessionManager } from '../utils/SessionManager';
 
 function PokemonCard(props) {
+  const [isSelected, setIsSelected] = useState(false);
   const { id, name, attack, defense, hp, speed, type, imageUrl } =
     props.pokemonData;
   const [loading, setLoading] = useState(props.loading);
   const withStats = props.withStats;
   const placeholder = props.placeholder;
   const opponentWait = props.opponentWait;
+
+  const handleSelected = (evt) => {
+    const anyPokemonSelected = props.reducerState.anyPokemonSelected;
+    if (!anyPokemonSelected) {
+      setIsSelected(true);
+      const dispatcher = props.reducerDispatcher;
+      dispatcher({ type: 'POKEMON_SELECTED' });
+      SessionManager.storeChosenPokemon(stripPrefixFromId(id));
+    }
+  };
+
+  /**
+   * DELETE ME
+   */
+  const stripPrefixFromId = (id)=>{
+    let idToString = new String(id);
+    let indexOfDash = idToString.indexOf('-');
+    return idToString.substring(indexOfDash+1, idToString.length);
+  }
+
+  useEffect(() => {
+    setLoading(props.loading);
+  }, [props.loading]);
 
   return (
     <>
@@ -29,6 +45,14 @@ function PokemonCard(props) {
             ? PokemonCardStyles.containerWStats
             : PokemonCardStyles.container
         }
+        style={
+          isSelected
+            ? { filter: 'grayscale(80%)', backgroundColor: 'grey' }
+            : {}
+        }
+        onClick={(evt) => {
+          handleSelected(evt);
+        }}
       >
         {opponentWait && (
           <>
