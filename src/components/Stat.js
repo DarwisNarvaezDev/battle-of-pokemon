@@ -1,5 +1,4 @@
 import { Box, LinearProgress, Typography } from "@mui/material";
-import { useEffect } from "react";
 
 function Stat(props) {
 

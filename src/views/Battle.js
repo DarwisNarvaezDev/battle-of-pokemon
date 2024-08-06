@@ -4,7 +4,9 @@ import BattleViewHeader from '../components/BattleViewHeader';
 import PokemonSelection from '../components/PokemonSelection';
 import BattleStatus, { BattleStatusSeverity } from '../components/BattleStatus';
 import BattleCards from '../components/BattleCards';
-import PokemonBattleReducer, { PokemonBattleReducerInitialStates } from '../reducer/PokemonBattleReducer';
+import PokemonBattleReducer, {
+  PokemonBattleReducerInitialStates,
+} from '../reducer/PokemonBattleReducer';
 import { SessionManager } from '../utils/SessionManager';
 import pokemon from '../store/pokemon';
 
@@ -31,7 +33,7 @@ function BattleView() {
       SessionManager.storePokemons(sessionPokemons);
       reducerDispatcher({ type: 'POKEMON_DATA_LOADED' });
       const userSelection = SessionManager.getChosenPokemon();
-      if( userSelection ){
+      if (userSelection) {
         reducerDispatcher({ type: 'POKEMON_SELECTED', payload: userSelection });
       }
     } else {
@@ -46,31 +48,12 @@ function BattleView() {
       <Box
         id="battle-view-main-container"
         aria-label="Container of the main app's view"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-          height: '700px',
-          backgroundColor: 'whitesmoke',
-        }}
+        sx={BattleViewStyles.mainContainer}
       >
         <Container
           id="battle-view-wrapper"
           aria-label="Responsive wrapper of the main app"
-          // style={BattleViewStyles.wrapper}
-          sx={{
-            maxWidth: '80%',
-            width: '70%',
-            height: '90%',
-            maxHeight: '90%',
-            display: 'flex',
-            gap: 2,
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            flexDirection: 'column',
-          }}
+          style={BattleViewStyles.wrapper}
         >
           <BattleViewHeader battleViewTitle={battleViewTitle} />
           <PokemonSelection
@@ -103,10 +86,11 @@ const BattleViewStyles = {
   mainContainer: {
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: '100vh',
-    maxWidth: 'sm',
+    height: '700px',
+    backgroundColor: 'whitesmoke',
   },
   wrapper: {
     maxWidth: '80%',
@@ -114,6 +98,7 @@ const BattleViewStyles = {
     height: '90%',
     maxHeight: '90%',
     display: 'flex',
+    gap: 2,
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'column',
