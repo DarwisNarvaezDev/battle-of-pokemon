@@ -48,17 +48,23 @@ function PokemonSelection(props) {
         >
           {pokemons.map((pokemon) => {
             return (
-              <>
-                <Grid item lg={1} md={2} sm={2} xs={1} sx={{ height: '110px' }}>
-                  <PokemonCard
-                    key={pokemon.id}
-                    reducerState={props.reducerState}
-                    reducerDispatcher={props.reducerDispatcher}
-                    loading={isLoading}
-                    pokemonData={pokemon}
-                  />
-                </Grid>
-              </>
+              <Grid
+                key={pokemon.name}
+                item
+                lg={1}
+                md={2}
+                sm={2}
+                xs={1}
+                sx={{ height: '110px' }}
+              >
+                <PokemonCard
+                  key={pokemon.id}
+                  reducerState={props.reducerState}
+                  reducerDispatcher={props.reducerDispatcher}
+                  loading={isLoading}
+                  pokemonData={pokemon}
+                />
+              </Grid>
             );
           })}
         </Grid>

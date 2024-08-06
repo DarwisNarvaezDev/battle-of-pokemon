@@ -4,6 +4,9 @@ import PokemonCard from './PokemonCard';
 import pokemon from '../store/pokemon';
 import { useEffect, useState } from 'react';
 import { SessionManager } from '../utils/SessionManager';
+import { BattleManager } from '../utils/BattleLogic';
+
+let battleManager = null;
 
 function BattleCards(props) {
   const loading = props.loading;
@@ -22,8 +25,25 @@ function BattleCards(props) {
   };
 
   const resolveOpponent = () => {
-    const randomPokemon = SessionManager.getRandomPokemon();
-    setOpponentPokemon(randomPokemon);
+    let opponent = SessionManager.getRandomPokemon(
+      props.reducerState.chosenPokemon.id
+    );
+    setOpponentPokemon(opponent);
+  };
+
+  const handleBattleStart = (evt) => {
+    battleManager = new BattleManager(
+      selectedPokemon,
+      setSelectedPokemon,
+      opponentPokemon,
+      setOpponentPokemon,
+      props.reducerDispatcher
+    );
+    battleManager.startBattle();
+  };
+
+  const handleAttack = (evt) => {
+    battleManager.attack();
   };
 
   useEffect(() => {
@@ -31,7 +51,10 @@ function BattleCards(props) {
       resolveUserChoice();
       setTimeout(() => {
         resolveOpponent();
-        props.reducerDispatcher({ type: 'READY_FOR_BATTLE', payload: opponentPokemon });
+        props.reducerDispatcher({
+          type: 'READY_FOR_BATTLE',
+          payload: opponentPokemon,
+        });
       }, 3000);
     } else {
       setIsLoading(loading);
@@ -43,13 +66,7 @@ function BattleCards(props) {
       <Box
         id="battle-view-battle-cards-container"
         aria-label="Responsive battle cards viewer"
-        sx={{
-          width: '100%',
-          flexGrow: 1,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
+        sx={BattleCardsStyles.responsiveBattleCardsViewer}
       >
         <Grid id="battle-viewer-grid" container spacing={1} columns={3} sx={{}}>
           <Grid
@@ -75,12 +92,7 @@ function BattleCards(props) {
           >
             <Stack
               spacing={3}
-              sx={{
-                display: 'flex',
-                height: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              sx={BattleCardsStyles.buttonsList}
             >
               <Typography sx={BattleCardsStyles.gameLabel} variant="h2">
                 VS
@@ -90,6 +102,9 @@ function BattleCards(props) {
                 variant="contained"
                 color="success"
                 disabled={props.reducerState.startButtonDisabled}
+                onClick={(evt) => {
+                  handleBattleStart(evt);
+                }}
               >
                 Start Battle
               </Button>
@@ -97,7 +112,10 @@ function BattleCards(props) {
                 sx={BattleCardsStyles.gameButton}
                 variant="contained"
                 color="error"
-                disabled
+                disabled={props.reducerState.attackButtonDisabled}
+                onClick={(evt) => {
+                  handleAttack(evt);
+                }}
               >
                 Attack!
               </Button>
@@ -108,7 +126,6 @@ function BattleCards(props) {
                 disabled={props.reducerState.startOverButtonDisabled}
                 onClick={() => {
                   SessionManager.clearSession();
-                  window.location.reload();
                 }}
               >
                 Start over
@@ -135,6 +152,19 @@ function BattleCards(props) {
 }
 
 const BattleCardsStyles = {
+  responsiveBattleCardsViewer: {
+    width: '100%',
+    flexGrow: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonsList: {
+    display: 'flex',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   gameLabel: {
     fontFamily: 'Pixelify Sans',
   },

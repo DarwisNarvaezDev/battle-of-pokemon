@@ -1,4 +1,5 @@
 import { Box, LinearProgress, Typography } from "@mui/material";
+import { useEffect } from "react";
 
 function Stat(props) {
 
@@ -22,6 +23,7 @@ function Stat(props) {
           color={'inherit'}
           sx={{
             height: "8px",
+            width: "100%",
             borderRadius: '5px',
             color: placeholder ? 'grey' : 'limegreen',
             mb: 0

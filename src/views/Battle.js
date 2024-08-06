@@ -4,7 +4,7 @@ import BattleViewHeader from '../components/BattleViewHeader';
 import PokemonSelection from '../components/PokemonSelection';
 import BattleStatus, { BattleStatusSeverity } from '../components/BattleStatus';
 import BattleCards from '../components/BattleCards';
-import PokemonBattleReducer from '../reducer/PokemonBattleReducer';
+import PokemonBattleReducer, { PokemonBattleReducerInitialStates } from '../reducer/PokemonBattleReducer';
 import { SessionManager } from '../utils/SessionManager';
 import pokemon from '../store/pokemon';
 
@@ -13,20 +13,9 @@ function BattleView() {
   const [battleViewTitle, setBattleViewTitle] = useState(initialTitle);
   const [pokemons, setPokemons] = useState([]);
 
-  const pokemonBattleReducerInitialStates = {
-    battleMessage: 'Loading Pokemons...',
-    battleStatusColor: BattleStatusSeverity.INFO.color,
-    loading: true,
-    startButtonDisabled: true,
-    attackButtonDisabled: true,
-    startOverButtonDisabled: true,
-    chosenPokemon: {},
-    opponentPokemon: {},
-  };
-
   const [reducerState, reducerDispatcher] = useReducer(
     PokemonBattleReducer,
-    pokemonBattleReducerInitialStates
+    PokemonBattleReducerInitialStates
   );
 
   const fetchPokemons = () => {

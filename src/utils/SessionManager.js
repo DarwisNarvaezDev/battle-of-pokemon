@@ -2,15 +2,21 @@ const userChoiceItemId = 'user_choice';
 const opponentItemId = 'opponent';
 const pokemonsInSessionId = 'pokemons';
 
+/**
+ * Yields the session operations
+ * 
+ */
 export class SessionManager {
   constructor() {}
 
+  /**
+   * Gets the pokemon previously chosen by user
+   * 
+   * @returns 
+   * 
+   */
   static getUserChoiceItemId() {
     return userChoiceItemId;
-  }
-
-  static getOpponentItemId() {
-    return opponentItemId;
   }
 
   /**
@@ -111,10 +117,10 @@ export class SessionManager {
    *
    * @param pokemon
    */
-  static getRandomPokemon() {
+  static getRandomPokemon(but) {
     try {
       const pokemonsInSession = this.getPokemonsFromSession();
-      const randomPokemonId = Math.floor(Math.random() * 5);
+      const randomPokemonId = this.getRandomNumberBut(1, 5, this.stripId(but));
       const filteredArray = pokemonsInSession.filter(
         (pokemon) => this.stripId(pokemon.id) == randomPokemonId
       );
@@ -133,9 +139,18 @@ export class SessionManager {
     }
   }
 
+  static getRandomNumberBut(from, to, but){
+    let random;
+    do{
+      random = Math.floor(Math.random() * to) + from;
+    }while(random == but);
+    return random;
+  }
+
   static clearSession(){
     try{
       sessionStorage.clear();
+      window.location.reload();
     }catch(error){
       console.error(error);
     }
