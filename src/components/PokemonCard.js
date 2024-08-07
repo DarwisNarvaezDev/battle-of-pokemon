@@ -19,18 +19,9 @@ function PokemonCard(props) {
       setIsSelected(true);
       const dispatcher = props.reducerDispatcher;
       dispatcher({ type: 'POKEMON_SELECTED', payload: props.pokemonData});
-      SessionManager.storePokemonId(SessionManager.getUserChoiceItemId(), stripPrefixFromId(id));
+      SessionManager.storePokemonId(SessionManager.getUserChoiceItemId(), id);
     }
   };
-
-  /**
-   * DELETE ME
-   */
-  const stripPrefixFromId = (id)=>{
-    let idToString = new String(id);
-    let indexOfDash = idToString.indexOf('-');
-    return idToString.substring(indexOfDash+1, idToString.length);
-  }
 
   useEffect(() => {
     setLoading(props.loading);

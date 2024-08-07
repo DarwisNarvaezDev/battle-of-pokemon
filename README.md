@@ -8,3 +8,5 @@ Simple app in which you select a pokemon from 5 possible ones and you can challe
 ## To play it
 
 ## Must see functionallity
+
+git submodule update --recursive --remote

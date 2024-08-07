@@ -10,6 +10,8 @@ import PokemonBattleReducer, {
 import { SessionManager } from '../utils/SessionManager';
 import pokemon from '../store/pokemon';
 
+const pokemonEndpoint = 'http://localhost:8080/pokemon';
+
 function BattleView() {
   const initialTitle = 'Battle of Pokemon';
   const [battleViewTitle, setBattleViewTitle] = useState(initialTitle);
@@ -20,9 +22,14 @@ function BattleView() {
     PokemonBattleReducerInitialStates
   );
 
-  const fetchPokemons = () => {
-    SessionManager.storePokemons(pokemon);
-    setPokemons(pokemon);
+  const fetchPokemons = async () => {
+    const request = await fetch(pokemonEndpoint);
+    if( !request.ok ){
+      throw new Error('Error during fetch');
+    }
+    const data = await request.json();
+    SessionManager.storePokemons(data);
+    setPokemons(data);
     reducerDispatcher({ type: 'POKEMON_DATA_LOADED' });
   };
 
@@ -98,7 +105,7 @@ const BattleViewStyles = {
     height: '90%',
     maxHeight: '90%',
     display: 'flex',
-    gap: 2,
+    gap: "20px",
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'column',

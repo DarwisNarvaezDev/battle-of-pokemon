@@ -186,13 +186,4 @@ export class BattleManager {
       (fighter) => fighter.pokemon.id !== this.next
     )[0].pokemon;
   }
-
-  /**
-   * DELETE ME
-   */
-  stripPrefixFromId(id) {
-    let idToString = new String(id);
-    let indexOfDash = idToString.indexOf('-');
-    return idToString.substring(indexOfDash + 1, idToString.length);
-  }
 }

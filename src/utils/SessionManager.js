@@ -47,15 +47,6 @@ export class SessionManager {
   }
 
   /**
-   * DELETE ME
-   */
-  static stripId(id) {
-    let idToString = new String(id);
-    let indexOfDash = idToString.indexOf('-');
-    return idToString.substring(indexOfDash + 1, idToString.length);
-  }
-
-  /**
    * Gets the user's choice from the session storage.
    *
    * @param pokemon
@@ -66,18 +57,22 @@ export class SessionManager {
       const chosenPokemonId = parseInt(
         sessionStorage.getItem(userChoiceItemId)
       );
-      const filteredArray = pokemonsInSession.filter(
-        (pokemon) => this.stripId(pokemon.id) == chosenPokemonId
-      );
-      if (filteredArray.length > 0) {
-        const filteredPokemon = filteredArray[0];
-        if (filteredPokemon.id != null) {
-          return filteredPokemon;
+      if( chosenPokemonId ){
+        const filteredArray = pokemonsInSession.filter(
+          (pokemon) => pokemon.id == chosenPokemonId
+        );
+        if (filteredArray.length > 0) {
+          const filteredPokemon = filteredArray[0];
+          if (filteredPokemon.id != null) {
+            return filteredPokemon;
+          } else {
+            throw new Error('Malformed pokemon object found.');
+          }
         } else {
-          throw new Error('Malformed pokemon object found.');
+          throw new Error('No valid pokemon found.');
         }
-      } else {
-        throw new Error('No valid pokemon found.');
+      }else{ 
+        return null;
       }
     } catch (error) {
       console.error(error);
@@ -95,7 +90,7 @@ export class SessionManager {
           sessionStorage.getItem(opponentItemId)
         );
         const filteredArray = pokemonsInSession.filter(
-          (pokemon) => this.stripId(pokemon.id) == chosenPokemonId
+          (pokemon) => pokemon.id == chosenPokemonId
         );
         if (filteredArray.length > 0) {
           const filteredPokemon = filteredArray[0];
@@ -119,10 +114,11 @@ export class SessionManager {
    */
   static getRandomPokemon(but) {
     try {
+      console.log(but);
       const pokemonsInSession = this.getPokemonsFromSession();
-      const randomPokemonId = this.getRandomNumberBut(1, 5, this.stripId(but));
+      const randomPokemonId = this.getRandomNumberBut(1, 5, but);
       const filteredArray = pokemonsInSession.filter(
-        (pokemon) => this.stripId(pokemon.id) == randomPokemonId
+        (pokemon) => pokemon.id == randomPokemonId
       );
       if (filteredArray.length > 0) {
         const filteredPokemon = filteredArray[0];

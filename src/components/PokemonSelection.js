@@ -1,6 +1,7 @@
 import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import PokemonCard from './PokemonCard';
 import { useEffect, useState } from 'react';
+import { SessionManager } from '../utils/SessionManager';
 import pokemon from '../store/pokemon';
 
 function PokemonSelection(props) {
@@ -14,7 +15,11 @@ function PokemonSelection(props) {
 
   useEffect(() => {
     setIsLoading(loading);
-  }, [loading]);
+    const sessionPokemons = SessionManager.getPokemonsFromSession();
+    if( sessionPokemons ){
+      setPokemons(sessionPokemons);
+    }
+  }, [loading, props.pokemons]);
 
   return (
     <>
