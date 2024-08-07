@@ -1,6 +1,10 @@
 # Battle of Pokemon
 Simple app in which user selects a pokemon from 5 possible choces and challenges another random pokemon to 💀.
 
+<p align="center">
+  <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXF5Y3Uxc2hiMzR6dzhmeGRsYnNueDM1MmN4YWhzNjY4YmN0MTF5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/w5FSoU86sXRFm/giphy.gif"/>
+</p>
+
 ## Dev Notes
 Some things disrupts from the original challenge expectation, is important to read about the insights of the developer to understand why these tradeoffs:
 
