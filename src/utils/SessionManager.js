@@ -7,8 +7,6 @@ const pokemonsInSessionId = 'pokemons';
  * 
  */
 export class SessionManager {
-  constructor() {}
-
   /**
    * Gets the pokemon previously chosen by user
    * 
@@ -59,7 +57,7 @@ export class SessionManager {
       );
       if( chosenPokemonId ){
         const filteredArray = pokemonsInSession.filter(
-          (pokemon) => pokemon.id == chosenPokemonId
+          (pokemon) => pokemon.id === chosenPokemonId
         );
         if (filteredArray.length > 0) {
           const filteredPokemon = filteredArray[0];
@@ -90,7 +88,7 @@ export class SessionManager {
           sessionStorage.getItem(opponentItemId)
         );
         const filteredArray = pokemonsInSession.filter(
-          (pokemon) => pokemon.id == chosenPokemonId
+          (pokemon) => pokemon.id === chosenPokemonId
         );
         if (filteredArray.length > 0) {
           const filteredPokemon = filteredArray[0];
@@ -118,7 +116,7 @@ export class SessionManager {
       const pokemonsInSession = this.getPokemonsFromSession();
       const randomPokemonId = this.getRandomNumberBut(1, 5, but);
       const filteredArray = pokemonsInSession.filter(
-        (pokemon) => pokemon.id == randomPokemonId
+        (pokemon) => pokemon.id === randomPokemonId
       );
       if (filteredArray.length > 0) {
         const filteredPokemon = filteredArray[0];
@@ -139,7 +137,7 @@ export class SessionManager {
     let random;
     do{
       random = Math.floor(Math.random() * to) + from;
-    }while(random == but);
+    }while(random === but);
     return random;
   }
 
