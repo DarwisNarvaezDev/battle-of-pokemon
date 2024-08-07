@@ -34,9 +34,10 @@ function PokemonSelection(props) {
       <Box
         id="battle-view-pokemon-select"
         aria-label="Selection panel for pokemons"
-        style={PokemonSelectionStyles.container}
         sx={{
           overflow: !matches && 'scroll',
+          minHeight: !matches ? '120px' : '80px',
+          ...PokemonSelectionStyles.container
         }}
       >
         <Grid

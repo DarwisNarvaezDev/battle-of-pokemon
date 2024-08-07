@@ -1,0 +1,24 @@
+services: 
+  bop-backend:
+    build: 
+      context: ./bop-service/
+    container_name: bop-backend
+    networks: 
+      - bop-network
+    tty: true
+    ports: 
+      - "8080:8080"
+
+  bop-frontend:
+    build: 
+      context: ./
+    container_name: bop-frontend
+    networks: 
+      - bop-network
+    tty: true
+    ports: 
+      - "3000:3000"
+  
+networks: 
+  bop-network:
+    driver: bridge
