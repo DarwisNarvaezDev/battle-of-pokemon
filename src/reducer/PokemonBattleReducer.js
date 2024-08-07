@@ -1,4 +1,4 @@
-import { BattleStatusSeverity } from "../components/BattleStatus";
+import { BattleStatusSeverity } from '../components/BattleStatus';
 
 export const PokemonBattleReducerInitialStates = {
   battleMessage: 'Loading Pokemons...',
@@ -17,8 +17,8 @@ export default function (state, action) {
       return {
         ...state,
         loading: !state.loading,
-        battleMessage: "Please, select your pokemon",
-        battleStatusColor: BattleStatusSeverity.SUCCESS.color
+        battleMessage: 'Please, select your pokemon',
+        battleStatusColor: BattleStatusSeverity.SUCCESS.color,
       };
     case 'POKEMON_SELECTED':
       return {
@@ -26,7 +26,7 @@ export default function (state, action) {
         battleMessage: 'Seeking opponent...',
         battleStatusColor: BattleStatusSeverity.INFO.color,
         chosenPokemon: action.payload,
-        anyPokemonSelected: true
+        anyPokemonSelected: true,
       };
     case 'READY_FOR_BATTLE':
       return {
@@ -35,30 +35,36 @@ export default function (state, action) {
         battleMessage: 'Ready for battle!',
         startButtonDisabled: false,
         startOverButtonDisabled: false,
-        opponentPokemon: action.payload
-      }
+        opponentPokemon: action.payload,
+      };
     case 'BATTLE_START':
       return {
         ...state,
         startButtonDisabled: true,
-      }
+      };
     case 'NOTIFY':
       return {
         ...state,
         battleMessage: action.payload.message,
         battleStatusColor: action.payload.color,
-      }
+      };
     case 'USER_ATTACKS':
       return {
         ...state,
-        attackButtonDisabled: false
-      }
+        attackButtonDisabled: false,
+      };
+    case 'OPPONENT_ATTACKS':
+      return {
+        ...state,
+        attackButtonDisabled: true,
+      };
     case 'WINNER':
       return {
         ...state,
         startButtonDisabled: true,
         attackButtonDisabled: true,
         battleMessage: action.payload,
-      }
+        battleStatusColor: BattleStatusSeverity.SUCCESS.color,
+      };
   }
 }

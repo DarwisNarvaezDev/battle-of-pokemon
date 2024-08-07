@@ -8,9 +8,7 @@ import PokemonBattleReducer, {
   PokemonBattleReducerInitialStates,
 } from '../reducer/PokemonBattleReducer';
 import { SessionManager } from '../utils/SessionManager';
-import pokemon from '../store/pokemon';
-
-const pokemonEndpoint = 'http://localhost:8080/pokemon';
+import Endpoints from '../utils/Endpoints';
 
 function BattleView() {
   const initialTitle = 'Battle of Pokemon';
@@ -23,7 +21,7 @@ function BattleView() {
   );
 
   const fetchPokemons = async () => {
-    const request = await fetch(pokemonEndpoint);
+    const request = await fetch(Endpoints.pokemons);
     if( !request.ok ){
       throw new Error('Error during fetch');
     }

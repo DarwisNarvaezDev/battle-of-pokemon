@@ -1,5 +1,20 @@
 import '../assets/fonts.css';
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Grid,
+  Modal,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import PokemonCard from './PokemonCard';
 import pokemon from '../store/pokemon';
 import { useEffect, useState } from 'react';
@@ -7,6 +22,7 @@ import { SessionManager } from '../utils/SessionManager';
 import { BattleManager } from '../utils/BattleLogic';
 
 let battleManager = null;
+const recordsEndpoint = 'http://localhost:8080/records';
 
 function BattleCards(props) {
   const loading = props.loading;
@@ -18,6 +34,28 @@ function BattleCards(props) {
   const [opponentPokemon, setOpponentPokemon] = useState(
     props.reducerState.opponentPokemon
   );
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleModal = () => {
+    setModalOpen(!modalOpen);
+  };
+
+  const [records, setRecords] = useState([]);
+
+  const fetchRecords = async () => {
+    const request = await fetch(recordsEndpoint);
+    if (!request.ok) {
+      setRecords([]);
+      return;
+    }
+    const data = await request.json();
+    if (data) {
+      const jsonArray = data.map(rawRecord => {
+        return JSON.parse(rawRecord.record)
+      })
+      setRecords(jsonArray);
+    }
+  };
 
   const resolveUserChoice = () => {
     setSelectedPokemon(props.reducerState.chosenPokemon);
@@ -47,6 +85,7 @@ function BattleCards(props) {
   };
 
   useEffect(() => {
+    fetchRecords();
     if (anyPokemonSelected) {
       resolveUserChoice();
       setTimeout(() => {
@@ -90,10 +129,7 @@ function BattleCards(props) {
               height: '400px',
             }}
           >
-            <Stack
-              spacing={3}
-              sx={BattleCardsStyles.buttonsList}
-            >
+            <Stack spacing={3} sx={BattleCardsStyles.buttonsList}>
               <Typography sx={BattleCardsStyles.gameLabel} variant="h2">
                 VS
               </Typography>
@@ -118,6 +154,17 @@ function BattleCards(props) {
                 }}
               >
                 Attack!
+              </Button>
+              <Button
+                sx={BattleCardsStyles.gameButton}
+                variant="outlined"
+                color="info"
+                disabled={false}
+                onClick={(evt) => {
+                  handleModal();
+                }}
+              >
+                Records
               </Button>
               <Button
                 sx={BattleCardsStyles.gameButton}
@@ -147,6 +194,78 @@ function BattleCards(props) {
           </Grid>
         </Grid>
       </Box>
+      <Modal
+        open={modalOpen}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            p: '5px',
+            width: '50%',
+            height: '50vh',
+            borderRadius: '5px',
+            backgroundColor: 'whitesmoke',
+            color: 'black',
+            mt: '10%',
+            ml: '50vh',
+            overflowY: 'scroll',
+          }}
+        >
+          <Box
+            sx={{
+              width: '100%',
+              height: '40px',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Typography variant="h5">Records</Typography>
+            <Button
+              variant="outlined"
+              startIcon={<CloseIcon />}
+              onClick={() => {
+                handleModal();
+              }}
+              sx={{
+                height: '30px',
+              }}
+            >
+              Close
+            </Button>
+          </Box>
+          <TableContainer component={Paper}>
+            <Table
+              sx={{ minWidth: '100%' }}
+              size="small"
+              aria-label="Record table"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Turns</TableCell>
+                  <TableCell>Looser</TableCell>
+                  <TableCell>Winner</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {records.map((record, index) => {
+                  return (
+                    <TableRow
+                      key={index}
+                    >
+                      <TableCell>{record.timestamp}</TableCell>
+                      <TableCell>{record.turns}</TableCell>
+                      <TableCell>{record.winner}</TableCell>
+                      <TableCell>{record.looser}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </Modal>
     </>
   );
 }

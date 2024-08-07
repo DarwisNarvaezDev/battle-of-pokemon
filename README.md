@@ -1,7 +1,8 @@
 # Battle of Pokemon
-Simple app in which you select a pokemon from 5 possible ones and you can challenge another random pokemon to death.
+Simple app in which user selects a pokemon from 5 possible choces and challenges another random pokemon to death.
 
 ## Dev Notes
+Some things disrupts from the original challenge expectation, is important to read about the insights of the developer to understand why these tradeoffs:
 
 # Instructions
 

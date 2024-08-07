@@ -1,11 +1,12 @@
 import { BattleStatusSeverity } from '../components/BattleStatus';
+import Endpoints from './Endpoints';
 
 const userId = 'user';
 const opponentId = 'opponent';
 
 /**
  * Yields the battle main functionallity.
- * 
+ *
  */
 export class BattleManager {
   turns = 0;
@@ -28,11 +29,11 @@ export class BattleManager {
     this.reducerDispatcher = reducerDispatcher;
   }
 
-    /**
+  /**
    * Clculates which of the "opponents" is not the user
-   * 
-   * @returns 
-   * 
+   *
+   * @returns
+   *
    */
   getOpponent() {
     return this.fighters.filter((fighter) => fighter.id === opponentId)[0]
@@ -41,9 +42,9 @@ export class BattleManager {
 
   /**
    * Clculates which of the "fighters" is the user
-   * 
-   * @returns 
-   * 
+   *
+   * @returns
+   *
    */
   getUser() {
     return this.fighters.filter((fighter) => fighter.id === userId)[0].pokemon;
@@ -55,7 +56,7 @@ export class BattleManager {
    */
   startBattle() {
     try {
-      this.reducerDispatcher({type: 'BATTLE_START'})
+      this.reducerDispatcher({ type: 'BATTLE_START' });
       // The starting pokemon is the fastest, if theres a draw,
       // the strongest starts
       const user = this.getUser();
@@ -83,9 +84,9 @@ export class BattleManager {
       // attack action to the user.
       setTimeout(() => {
         if (this.next === this.getUser().id) {
-          console.log('User starts');
           this.reducerDispatcher({ type: 'USER_ATTACKS' });
         } else {
+          this.reducerDispatcher({ type: 'OPPONENT_ATTACKS' });
           this.attack();
         }
       }, 3000);
@@ -96,7 +97,7 @@ export class BattleManager {
 
   /**
    * Perform the substraction of hp from the 'opponent'
-   * 
+   *
    */
   attack() {
     try {
@@ -125,12 +126,26 @@ export class BattleManager {
           BattleStatusSeverity.INFO.color
         );
         if (opponentPokemon.hp === 0) {
-          this.reducerDispatcher({type: 'WINNER', payload: `${attackingPokemon.name} wins!`})
-          return
+          const recordObject = {
+            timestamp: this.calculateCurrentDate(),
+            turns: this.turns,
+            winner: attackingPokemon.name,
+            looser: opponentPokemon.name
+          };
+          const recordsPayload = {
+            record: JSON.stringify(recordObject)
+          };
+          this.recordBattleResult(recordsPayload);
+          this.reducerDispatcher({
+            type: 'WINNER',
+            payload: `${attackingPokemon.name} wins!`,
+          });
+          return;
         } else {
           if (this.next === this.getUser().id) {
             this.reducerDispatcher({ type: 'USER_ATTACKS' });
           } else {
+            this.reducerDispatcher({ type: 'OPPONENT_ATTACKS' });
             this.attack();
           }
         }
@@ -140,11 +155,42 @@ export class BattleManager {
     }
   }
 
+  calculateCurrentDate(){
+    const currentDate = new Date();
+    const currentDayOfMonth = currentDate.getDate();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    return currentDayOfMonth + "/" + (currentMonth + 1) + "/" + currentYear;
+  }
+
+  /**
+   * Records the battle result
+   *
+   */
+  async recordBattleResult(recordString) {
+    try {
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(recordString),
+      };
+      const request = await fetch(Endpoints.records, options);
+      if (!request.ok) {
+        throw new Error('Unable to connect with api.');
+      }
+      const data = await request.json();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   /**
    * Updates a fighter from the class array
-   * 
-   * @param {} oldFighter 
-   * @param {*} newPokemon 
+   *
+   * @param {} oldFighter
+   * @param {*} newPokemon
    */
   updateFighter(oldFighter, newPokemon) {
     const index = this.fighters.indexOf(oldFighter);
@@ -153,10 +199,10 @@ export class BattleManager {
 
   /**
    * Sends a message to resucer's dispatcher
-   * 
+   *
    * @param {
-   * } message 
-   * @param {*} color 
+   * } message
+   * @param {*} color
    */
   notify(message, color) {
     this.reducerDispatcher({
@@ -167,8 +213,8 @@ export class BattleManager {
 
   /**
    * Clculates which of the "fighters" is the attacker
-   * 
-   * @returns 
+   *
+   * @returns
    */
   calculateAttackingPokemon() {
     return this.fighters.filter(
@@ -176,10 +222,10 @@ export class BattleManager {
     )[0].pokemon;
   }
 
-    /**
+  /**
    * Clculates which of the "fighters" is the opponent
-   * 
-   * @returns 
+   *
+   * @returns
    */
   calculateOpponentPokemon() {
     return this.fighters.filter(
