@@ -28,13 +28,13 @@ The recommended way to build and run the app is to create a Docker's image from 
 
 If your want build and run the frontend and the backend as a whole app in one single command:
 
-0. First download and update the submodule (the backend): ```git submodule update --recursive --remote```
+0. First download and update the submodule (the backend): ```git submodule update --init --recursive```
 1.  ```docker compose up```
 
 If you don't have docker installed, you can use the following:
 
 For the backend: 
-1. ```git submodule update --recursive --remote```
+1. ```git submodule update --init --recursive```
 2. navigate to ./bop-service/
 3. run ```npm run entrypoint``` and the app will start on port **8080**.
 
